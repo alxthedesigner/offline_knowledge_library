@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Offie - Offline Library</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 4 3 28h26z' fill='%238daa74'/%3E%3Cpath d='M16 18 12 28h8z' fill='%23171513'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="masthead">
+  <div class="masthead-row">
+    <button type="button" class="icon-btn back-btn" id="back-btn" aria-label="Back" data-tip="Back">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </button>
+    <a class="brand" href="#home" aria-label="Offie home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 3 28h26z" fill="currentColor"/><path d="M16 18 12 28h8z"/></svg>
+      <div><h1>Offie - Offline Library</h1></div>
+    </a>
+    <div class="head-actions">
+      <button class="btn drives-btn" id="drives-btn" type="button" title="Where downloads go. Click to switch drives." aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M5 13 7.5 5h9L19 13M7 16.5h.01"/></svg>
+        Drive <span class="muted" id="drive-name">· none yet</span>
+      </button>
+      <button class="btn fav-btn" id="packages-btn" type="button" aria-label="Packages" data-tip="Packages">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg>
+        <span class="btn-label">Packages</span>
+      </button>
+      <button class="btn queue-btn" id="queue-btn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        Queue <span class="queue-count" id="queue-count">0</span>
+      </button>
+    </div>
+  </div>
+  <nav class="steps" aria-label="Steps">
+    <a href="#pick" data-step="pick"><span class="num">1</span>Choose topics</a>
+    <span class="step-arrow" data-after="pick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <a href="#drive" data-step="drive"><span class="num">2</span>Choose a drive</a>
+    <span class="step-arrow" data-after="drive" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <a href="#build" data-step="build"><span class="num">3</span>Build &amp; test the drive</a>
+  </nav>
+</header>
+
+<main>
+  <div id="notice" class="notice" role="status" hidden></div>
+  <div id="connect-banner" class="card banner" hidden></div>
+
+  <!-- Landing page -->
+  <section id="step-home" class="step home" hidden>
+    <div class="hero">
+      <h2 class="hero-title">Expand Your Knowledge and Improve Your Community</h2>
+      <p class="hero-lead">Offie is an offline library that gives you the hands-on skills to build a self-sufficient community that can work together for the public good. This system is built for portability and to avoid subscriptions, hidden data collection, restrictions, and full reliance on the internet.</p>
+      <div class="hero-actions">
+        <a class="btn big hero-cta" href="#pick">Explore Topics →</a>
+        <a class="btn big hero-cta2" href="#drive">Choose Drive…</a>
+      </div>
+    </div>
+
+    <div class="why-grid">
+      <section class="card why">
+        <span class="why-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 12 4l9 16z"/><path d="M12 4v16M9 20l3-6 3 6"/></svg></span>
+        <h3>Build Self-Sufficiency</h3>
+        <p class="muted small">Build the basic skills to look after yourself and provide service to your community. Learn how to gather food and water, build shelter, render first aid, and more.</p>
+      </section>
+      <section class="card why">
+        <span class="why-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></span>
+        <h3>Build Infrastructure</h3>
+        <p class="muted small">Fix systems and build your own infrastructure. Search tech repair guides, electrical connections, electronics, and communication networks.</p>
+      </section>
+      <section class="card why">
+        <span class="why-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg></span>
+        <h3>Learn From the Real World</h3>
+        <p class="muted small">Combine your online research and real world findings into a personalized continuous learning library built from your own experiences in nature, abroad, and in unfamiliar territory.</p>
+      </section>
+    </div>
+
+    <section class="card fav" aria-labelledby="fav-title">
+      <div class="fav-head">
+        <div class="grow">
+          <h2 id="fav-title" class="section-title">Favorites</h2>
+          <p class="muted small" id="fav-hint">Download in one click to the drive shown in the top bar.</p>
+        </div>
+      </div>
+      <p class="small muted" id="home-drive-note"></p>
+      <div id="fav-list" class="fav-grid"></div>
+      <div class="row-actions">
+        <a class="link-btn" href="#pick">See all packages</a>
+      </div>
+    </section>
+
+    <section class="card field-id" aria-labelledby="fid-title">
+      <div class="grow">
+        <span class="pill">Coming soon</span>
+        <h2 id="fid-title" class="section-title">Field identification</h2>
+        <p class="muted">Identify plants, mushrooms, animal tracks, birds and insects out in the field. This will connect to a separate Offie project.</p>
+      </div>
+      <div class="row-actions" id="fid-actions"></div>
+    </section>
+  </section>
+
+  <!-- Step 2: choose a drive -->
+  <section id="step-drive" class="step" hidden>
+    <div class="layout">
+      <div class="col-main">
+        <div class="card drive-choose">
+          <div>
+            <h2 class="title">Where should your library go?</h2>
+            <p class="muted">Pick a USB stick or external drive to download your library to. To use your computer's own disk or any folder, type its path below.</p>
+          </div>
+          <div class="choice" data-mode="scan">
+            <label class="choice-head">
+              <input type="radio" name="drive-mode" value="scan">
+              <span class="radio" aria-hidden="true"></span>
+              <span class="grow"><b>Can Offie look for removable drives?</b>
+                <span class="muted small">Offie checks for external hard drives, USBs, and SD cards that are plugged in. Offie only reads these drives' names, sizes, and free space; your computer's disks are not shown by default; use “Use a folder or another disk”.</span></span>
+            </label>
+            <div class="choice-body">
+              <div class="row-actions" id="scan-actions"></div>
+              <div id="drive-list" class="drive-grid"></div>
+            </div>
+          </div>
+          <form class="choice" data-mode="folder" id="drive-form">
+            <label class="choice-head">
+              <input type="radio" name="drive-mode" value="folder">
+              <span class="radio" aria-hidden="true"></span>
+              <span class="grow"><b>Use a folder or another disk</b>
+                <span class="muted small">Save to your computer's disk, a network drive, or a drive by typing the folder path here.</span></span>
+            </label>
+            <div class="choice-body">
+              <div class="inline-form">
+                <label class="grow">Folder path<input id="drive-path" placeholder="/Volumes/MyDrive" spellcheck="false" autocomplete="off"></label>
+                <button class="btn primary" type="submit">Use this folder</button>
+              </div>
+              <div id="folder-card" class="drive-grid"></div>
+            </div>
+          </form>
+          <div class="drive-next" id="drive-next"></div>
+        </div>
+        <p class="muted small" id="perm-note" hidden></p>
+      </div>
+      <aside class="col-side">
+        <div class="card">
+          <h3>How much space do you need?</h3>
+          <div id="space-list" class="space-list"></div>
+          <p class="muted small divider" id="fit-note"></p>
+        </div>
+        <div class="card">
+          <h3>What happens to the drive</h3>
+          <p class="muted small" id="folder-note">We add one folder, <b>OfflineLibrary</b>. Nothing else on the drive is changed or deleted.</p>
+          <p class="muted small">Best format: <b>exFAT</b>. It works on Mac, Windows and Linux and holds big files.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Step 1: Explore Topics -->
+  <section id="step-pick" class="step" hidden>
+    <div class="layout">
+      <nav class="card sidebar" aria-label="Categories">
+        <input id="filter" type="search" placeholder="Search topics and libraries" aria-label="Search topics and libraries">
+        <div class="eyebrow">Categories</div>
+        <div id="cat-list"></div>
+        <div class="side-pkgs" id="side-pkgs"></div>
+        <div class="sidebar-foot">
+          <span class="muted small" id="catalog-status"></span>
+          <button class="btn small ghost" id="refresh" type="button">Refresh catalog</button>
+        </div>
+      </nav>
+      <div class="col-main">
+        <div class="card intro">
+          <div class="grow">
+            <h2 class="title" id="cat-title"></h2>
+          </div>
+          <button class="btn primary big" id="quick-add" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Quick add
+          </button>
+        </div>
+        <div id="topics" class="topic-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 3 -->
+  <section id="step-build" class="step" hidden>
+    <div class="card intro">
+      <div class="grow">
+        <h2 class="title">Build &amp; test your drive</h2>
+        <p class="muted">Four short parts, top to bottom. You can leave and come back: downloads keep going, and you can build again at any time.</p>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="col-stack">
+        <section class="card part">
+          <header><span class="part-num">1</span><h3 class="grow">Let your downloads finish</h3><span class="muted small strong" id="dl-summary"></span></header>
+          <div id="build-jobs" class="job-list"></div>
+          <a href="#pick" class="link-green">+ Add more libraries or websites</a>
+        </section>
+        <section class="card part">
+          <header><span class="part-num">2</span><h3>Which computers should open this drive?</h3></header>
+          <p class="muted small">We put a small reader app on the drive for each one you tick (about 10 MB each). Ticking them all is safest: you may not know what computer you'll find.</p>
+          <div id="platforms" class="platform-grid"></div>
+          <p class="note">Phones and tablets don't need this. Install the free Kiwix app, then open the files in the drive's <b>zim</b> folder.</p>
+        </section>
+      </div>
+      <div class="col-stack">
+        <section class="card part">
+          <header><span class="part-num">3</span><h3>Build the drive</h3></header>
+          <p class="muted small">Makes the home page that links to everything, and adds the START files you double-click to open the library. Build again whenever you add something new.</p>
+          <div id="build-box" class="status-box"></div>
+          <p class="warn-text small" id="build-warn" hidden></p>
+          <button class="btn primary big" id="build" type="button">Build drive</button>
+        </section>
+        <section class="card part">
+          <header><span class="part-num">4</span><h3>Test it on this computer</h3></header>
+          <p class="muted small">Opens the library from the drive, the same way it will work with no internet.</p>
+          <div id="test-area"></div>
+        </section>
+      </div>
+    </div>
+    <section class="howto">
+      <h2>Using the drive with no internet</h2>
+      <div class="howto-grid">
+        <div><b>1 · Unplug safely</b><p>Stop the reader, then eject the drive before pulling it out.</p></div>
+        <div><b>2 · Plug into any computer</b><p>Mac, Windows or Linux. No internet or install needed.</p></div>
+        <div><b>3 · Double-click START</b><p>Open the <span class="lib-folder">OfflineLibrary</span> folder and pick yours:</p>
+          <p class="codes"><code>START-Mac.command</code> <code>START-Windows.bat</code> <code>START-Linux.sh</code></p></div>
+        <div><b>4 · Read in the browser</b><p>The home page opens with a link for every topic and library on the drive.</p></div>
+      </div>
+      <p class="small">A <b>README-FIRST.txt</b> file with these same steps is saved on the drive too.</p>
+    </section>
+  </section>
+</main>
+
+<footer class="bar" id="bar">
+  <div class="bar-inner">
+    <div class="grow"><b id="bar-title"></b><small id="bar-sub"></small></div>
+    <div class="bar-meter" id="bar-meter" hidden>
+      <div class="meter"><span class="used"></span><span class="pick"></span></div>
+      <small>Darker: already used · Lighter: picked</small>
+    </div>
+    <div class="row-actions" id="bar-actions"></div>
+  </div>
+</footer>
+
+<!-- Preview drawer -->
+<dialog id="preview" class="drawer" aria-label="Preview">
+  <div class="drawer-head">
+    <div class="grow">
+      <div class="eyebrow" id="pv-kind"></div>
+      <h2 id="pv-title"></h2>
+      <p class="muted small" id="pv-meta"></p>
+    </div>
+    <button class="icon-btn" data-close type="button" aria-label="Close preview">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <div class="browser">
+      <div class="browser-bar"><span></span><span></span><span class="url" id="pv-url"></span></div>
+      <div class="browser-view">
+        <iframe id="pv-frame" title="Site preview" referrerpolicy="no-referrer"></iframe>
+        <div class="pv-msg" id="pv-msg" hidden></div>
+      </div>
+    </div>
+    <p class="muted small">Nothing is saved until you add it. The preview loads the live site from the internet.</p>
+  </div>
+  <div class="drawer-foot">
+    <a class="btn" id="pv-open" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></svg>Visit full website</a>
+    <button type="button" class="btn" data-act="pv-copy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span>Copy link</span></button>
+    <span class="grow"></span>
+    <span id="pv-action"></span>
+  </div>
+</dialog>
+
+<!-- Quick add -->
+<dialog id="qa" class="modal narrow" aria-label="Quick add">
+  <div class="drawer-head">
+    <div class="grow"><div class="eyebrow" id="qa-kind">Quick add</div><h2 id="qa-title"></h2></div>
+    <button class="icon-btn" data-close type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="qa-docker" class="notice warn" hidden>Docker isn't running. Start Docker Desktop to copy websites. You can still add them now; they'll wait until Docker is up.</div>
+    <form id="qa-form" class="stack">
+      <label>1. Pick a topic<select name="topic" id="qa-topic"></select></label>
+      <div class="label"><label for="qa-url">2. Website address</label>
+        <div class="url-row">
+          <input id="qa-url" name="url" type="url" required placeholder="https://example.org/guide/" spellcheck="false" autocomplete="off">
+          <button class="icon-btn eye-btn" type="button" id="qa-preview" aria-label="Preview this website" title="Preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+      </div>
+      <p class="muted small" id="qa-note">Copied with Docker when you download. Only copy sites you're allowed to.</p>
+      <p class="small ok-text" id="qa-status" role="status"></p>
+    </form>
+  </div>
+  <div class="drawer-foot"><span class="grow"></span><button class="btn" data-close type="button" id="qa-close">Done</button><button class="btn primary" type="submit" form="qa-form" id="qa-submit">Add to queue</button></div>
+</dialog>
+
+<!-- Downloads -->
+<dialog id="downloads" class="popup" aria-label="Downloads">
+  <div class="pop-head"><h2>Downloads</h2><button class="icon-btn sm" data-close type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="pop-body"><div id="all-jobs" class="job-list"></div></div>
+  <div class="pop-foot"><span class="grow"></span><button class="btn small" id="clear-jobs" type="button">Clear finished</button></div>
+</dialog>
+
+<!-- Drives: quick switch between plugged-in drives -->
+<dialog id="drives-pop" class="popup" aria-label="Drives">
+  <div class="pop-head"><div class="grow"><h2>Drives</h2><p class="muted small">Where downloads go</p></div><button class="icon-btn sm" data-close type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="pop-body"><div id="drives-pop-list" class="stack"></div></div>
+  <div class="pop-foot"><button class="btn small ghost" type="button" data-act="pop-rescan">Look again</button><span class="grow"></span><a class="btn small" href="#drive">More</a></div>
+</dialog>
+
+<!-- Packages (all packages) -->
+<dialog id="packages" class="popup wide" aria-label="Packages">
+  <div class="pop-head"><h2>Packages</h2><button class="icon-btn sm" data-close type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="pop-search"><input id="pkg-search" type="search" placeholder="Search packages" aria-label="Search packages"></div>
+  <div class="pop-body"><div id="pkg-list" class="stack"></div></div>
+  <div class="pop-foot">
+    <button class="btn small" id="pkg-import" type="button">Import a package</button>
+    <input type="file" id="pkg-file" accept=".json,application/json" hidden>
+  </div>
+</dialog>
+
+<!-- Save queue as package -->
+<dialog id="save-pkg" class="modal" aria-label="Save as package">
+  <form id="save-pkg-form" method="dialog">
+    <div class="drawer-head">
+      <div class="grow"><div class="eyebrow">Save your queue</div><h2>Save as a package</h2></div>
+      <button class="icon-btn" data-close type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="muted small" id="save-pkg-summary"></p>
+      <label>Name<input name="name" required maxlength="80" placeholder="Family first-aid kit" autocomplete="off"></label>
+      <label>Description <span class="muted">(optional)</span><textarea name="description" rows="3" maxlength="500" placeholder="What it's for, or who it's for"></textarea></label>
+    </div>
+    <div class="drawer-foot"><span class="grow"></span><button class="btn" data-close type="button">Cancel</button><button class="btn primary" type="submit">Save package</button></div>
+  </form>
+</dialog>
+
+<!-- Queue -->
+<dialog id="queue" class="popup" aria-label="Queue">
+  <div class="pop-head"><div class="grow"><h2>Queue</h2><p class="muted small" id="queue-summary"></p></div>
+    <button class="icon-btn sm" data-close type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="pop-body"><div id="queue-list" class="stack"></div></div>
+  <div class="pop-foot" id="queue-foot"></div>
+</dialog>
+
+<!-- Edit a topic -->
+<dialog id="edit-topic" class="modal narrow" aria-label="Edit topic">
+  <form id="edit-topic-form" method="dialog">
+    <div class="drawer-head">
+      <div class="grow"><div class="eyebrow">Edit topic</div><h2 id="edit-topic-title"></h2></div>
+      <button class="icon-btn" data-close type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <label>Name<input name="title" required maxlength="80" autocomplete="off"></label>
+      <fieldset class="edit-items">
+        <legend>Libraries in this topic <span class="muted small">(untick to remove)</span></legend>
+        <div id="edit-topic-libs" class="stack"></div>
+      </fieldset>
+      <div class="label"><label for="edit-topic-add">Add a library</label>
+        <div class="url-row"><select id="edit-topic-add"></select><button type="button" class="btn" id="edit-topic-add-btn">Add</button></div>
+      </div>
+      <p class="muted small" id="edit-topic-note"></p>
+    </div>
+    <div class="drawer-foot">
+      <button class="btn ghost danger" type="button" id="edit-topic-reset" hidden>Reset to Offie's version</button>
+      <span class="grow"></span><button class="btn" data-close type="button">Cancel</button><button class="btn primary" type="submit">Save changes</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Edit a package -->
+<dialog id="edit-pkg" class="modal" aria-label="Edit package">
+  <form id="edit-pkg-form" method="dialog">
+    <div class="drawer-head">
+      <div class="grow"><div class="eyebrow" id="edit-pkg-kind">Edit package</div><h2>Edit package</h2></div>
+      <button class="icon-btn" data-close type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <label>Name<input name="name" required maxlength="80" autocomplete="off"></label>
+      <label>Description <span class="muted">(optional)</span><textarea name="description" rows="3" maxlength="500"></textarea></label>
+      <fieldset class="edit-items">
+        <legend>What's in it <span class="muted small">(untick to remove)</span></legend>
+        <div id="edit-pkg-items" class="stack"></div>
+      </fieldset>
+      <label class="check-row" id="edit-pkg-addq"><input type="checkbox" name="addQueue"><span id="edit-pkg-addq-text"></span></label>
+      <p class="muted small" id="edit-pkg-note"></p>
+    </div>
+    <div class="drawer-foot">
+      <button class="btn ghost danger" type="button" id="edit-pkg-reset" hidden>Reset to Offie's version</button>
+      <span class="grow"></span><button class="btn" data-close type="button">Cancel</button><button class="btn primary" type="submit">Save changes</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
